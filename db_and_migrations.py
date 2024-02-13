@@ -8,9 +8,9 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import ValidationError
 from fastapi.responses import JSONResponse
 
-app = FastAPI(
-    title="Trading App"
-)
+# app = FastAPI(
+#     title="Trading App"
+# )
 
 
 # Благодаря этой функции клиент видит ошибки, происходящие на сервере, вместо "Internal server error"

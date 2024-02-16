@@ -40,4 +40,4 @@ class User(Base):
 
 
 
-user = User.__table__
+# user = User.__table__

@@ -24,6 +24,13 @@ app.include_router(
     tags=["auth"],
 )
 
+fake_traders = [
+    {"id": 1, "currency": "BTC", "side": "but", "price": 123, "amount": 2.12},
+    {"id": 2, "currency": "BTC", "side": "sell", "price": 125, "amount": 2.12},
+
+]
+
+
 app.include_router(router_operation)
 
 # uvicorn src.main:app --reload

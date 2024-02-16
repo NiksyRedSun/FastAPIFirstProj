@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -14,12 +14,46 @@ router = APIRouter(
     tags=["Operation"]
 )
 
-# создание ендпоинтов
-@router.get("/")
+# создание ендпоинтов + отработка ошибок с отправкой информации пользователю
+# стоит придерживаться единой структуры ответа
+# как в данном случае, в returne
+# ендпоинт по хорошему должен оборачиваться в try/except
+# ОДИНАКОВАЯ СТРУКТУРА ОТВЕТОВ - ЭТО ВАЖНО
+@router.get("")
 async def get_specific_operations(operation_type: str, session: AsyncSession = Depends(get_async_session)):
-    query = select(operation).where(operation.с.type == operation_type)
-    result = await session.execute(query)
-    return result.mappings().all()
+    try:
+        query = select(operation).where(operation.c.type == operation_type)
+        result = await session.execute(query)
+        return {
+            "status": "success",
+            "data": result.all(),
+            "details": None
+        }
+
+    except ZeroDivisionError:
+        # Передать конкретную ошибку разработчикам
+        return {
+            "status": "error",
+            "data": None,
+            "details": "Делишь на ноль, не надо так"
+        }
+
+    except Exception:
+        # Передать любую ошибку разработчикам
+        return {
+            "status": "error",
+            "data": None,
+            "details": None
+        }
+    # можно также подбирать ошибки с помощью рейзов
+    # except Exception:
+    #     # Передать ошибку разработчикам
+    #     raise HTTPException(status_code=500, detail={
+    #         "status": "error",
+    #         "data": None,
+    #         "details": None
+    #     })
+
 
 
 

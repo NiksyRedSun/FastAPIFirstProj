@@ -1,14 +1,16 @@
 from fastapi import FastAPI
-
+from starlette.staticfiles import StaticFiles
 
 from src.auth.base_config import auth_backend, fastapi_users
 from src.auth.schemas import UserRead, UserCreate
 from src.operations.router import router as router_operation
-
+from src.pages.router import router as router_pages
 
 app = FastAPI(
     title="Trading App"
 )
+
+app.mount("/src/static", StaticFiles(directory="src/static"), name="static")
 
 
 # Ниже два роутера - для аутентификации и регистрации
@@ -32,5 +34,6 @@ fake_traders = [
 
 
 app.include_router(router_operation)
-
+app.include_router(router_pages)
 # uvicorn src.main:app --reload
+

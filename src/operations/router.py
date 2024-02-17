@@ -21,31 +21,32 @@ router = APIRouter(
 # ОДИНАКОВАЯ СТРУКТУРА ОТВЕТОВ - ЭТО ВАЖНО
 @router.get("")
 async def get_specific_operations(operation_type: str, session: AsyncSession = Depends(get_async_session)):
-    try:
-        query = select(operation).where(operation.c.type == operation_type)
+    # try:
+        query = select(operation).where(operation.type == operation_type)
         result = await session.execute(query)
+        pre_res = list(map(lambda x: x[0], result.all()))
         return {
             "status": "success",
-            "data": result.all(),
+            "data": pre_res,
             "details": None
         }
 
-    except ZeroDivisionError:
-        # Передать конкретную ошибку разработчикам
-        return {
-            "status": "error",
-            "data": None,
-            "details": "Делишь на ноль, не надо так"
-        }
-
-    except Exception:
-        # Передать любую ошибку разработчикам
-        return {
-            "status": "error",
-            "data": None,
-            "details": None
-        }
-    # можно также подбирать ошибки с помощью рейзов
+    # except ZeroDivisionError:
+    #     # Передать конкретную ошибку разработчикам
+    #     return {
+    #         "status": "error",
+    #         "data": None,
+    #         "details": "Делишь на ноль, не надо так"
+    #     }
+    #
+    # except Exception:
+    #     # Передать любую ошибку разработчикам
+    #     return {
+    #         "status": "error",
+    #         "data": None,
+    #         "details": None
+    #     }
+    # можно также подбирать ошибки с помощью рейзов, но мне верхний способ больше понравился
     # except Exception:
     #     # Передать ошибку разработчикам
     #     raise HTTPException(status_code=500, detail={

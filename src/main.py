@@ -5,6 +5,7 @@ from src.auth.base_config import auth_backend, fastapi_users
 from src.auth.schemas import UserRead, UserCreate
 from src.operations.router import router as router_operation
 from src.pages.router import router as router_pages
+from src.chat.router import router as router_chat
 
 app = FastAPI(
     title="Trading App"
@@ -32,7 +33,7 @@ fake_traders = [
 
 ]
 
-
+app.include_router(router_chat)
 app.include_router(router_operation)
 app.include_router(router_pages)
 # uvicorn src.main:app --reload
